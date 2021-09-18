@@ -1,3 +1,4 @@
+#ввод библиотек
 import rospy
 import time
 from clover import srv
@@ -6,7 +7,7 @@ from threading import Thread
 
 Land = False
 
-
+#функция посадки
 def landing():
   res = input()
   while res != "l":
@@ -15,8 +16,8 @@ def landing():
 
 rospy.init_node('flight')
 
-FocusAlt = 1.6
-Coords = [
+FocusAlt = 1.6 # фокусное расстояние
+Coords = [ #список координат для пролета
 [0.5, 0],
 [0.5, 0],
 [0.5, 0],
@@ -33,18 +34,18 @@ set_attitude = rospy.ServiceProxy('set_attitude', srv.SetAttitude)
 set_rates = rospy.ServiceProxy('set_rates', srv.SetRates)
 land = rospy.ServiceProxy('land', Trigger)
 telemetry = get_telemetry()
-navigate(x=0, y=0, z=1.5, speed=0.5, frame_id='body', auto_arm=True)
+navigate(x=0, y=0, z=FocusAlt, speed=0.5, frame_id='body', auto_arm=True)
 rospy.sleep(15)
-for i in range(len(Coords)):
+for i in range(len(Coords)): #цикл пролета по заданным в словарь координатам
   elem = Coords[i]
   print(i + 1, "point")
   navigate(x=elem[0], y=elem[1], z=0, speed=0.09, frame_id='body')
   rospy.sleep(10)
   if Land:
-    break
+    break #выход из цикла 
     rospy.sleep(5)
 
-land()
+land() #посадка
 
 
 
